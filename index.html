@@ -1,10 +1,39 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Descargar Paquete</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RN68VLQLTW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RN68VLQLTW');
+        gtag('config', 'G-QN502DE5XV');
+    </script>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '373277814132384');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=373277814132384&ev=PageView&noscript=1"
+        alt="Meta Pixel"/>
+    </noscript>
+    
     <style>
         * {
             margin: 0;
@@ -63,7 +92,9 @@
     </style>
 </head>
 <body>
-    <a href="https://32c95b00-9650-4986-aad5-b87c9761cdef.usrfiles.com/archives/32c95b_01b7da805433436faecef58885c7224f.zip" class="download-btn">
+    <a href="https://32c95b00-9650-4986-aad5-b87c9761cdef.usrfiles.com/archives/32c95b_01b7da805433436faecef58885c7224f.zip" 
+       class="download-btn"
+       onclick="trackDownload()">
         <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -71,5 +102,37 @@
         </svg>
         Descargar Paquete Gratuito
     </a>
+
+    <script>
+        function trackDownload() {
+            // Enviar evento personalizado a Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', 'PDF Gratuito');
+            }
+            
+            // Enviar evento a Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'download', {
+                    'event_category': 'engagement',
+                    'event_label': 'PDF Gratuito'
+                });
+            }
+
+            // Cambiar el texto del botón
+            const btn = document.querySelector('.download-btn');
+            const icon = btn.querySelector('.download-icon');
+            const textNode = btn.childNodes[2];
+            
+            // Cambiar ícono a check
+            icon.innerHTML = '<circle cx="12" cy="12" r="10"></circle><polyline points="9 12 11 14 15 10"></polyline>';
+            
+            // Cambiar texto
+            textNode.textContent = 'Tu descarga iniciará en breve';
+            
+            // Deshabilitar el botón
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.8';
+        }
+    </script>
 </body>
 </html>
