@@ -27,7 +27,6 @@
         'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '373277814132384');
         fbq('track', 'PageView');
-        fbq('trackCustom', 'PDF Gratuito');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
@@ -52,88 +51,301 @@
             padding: 20px;
         }
 
-        .download-btn {
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
             background: white;
-            color: #667eea;
-            padding: 18px 40px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .email-input {
+            padding: 16px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .email-input:focus {
+            border-color: #667eea;
+        }
+
+        .email-input.error {
+            border-color: #ff4444;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 14px;
+            text-align: left;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
             font-size: 18px;
             font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
 
-        .download-btn:hover {
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            background: #f8f9ff;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
 
-        .download-btn:active {
-            transform: translateY(0);
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .download-icon {
-            width: 24px;
-            height: 24px;
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .form-hidden {
+            display: none;
         }
 
         @media (max-width: 480px) {
-            .download-btn {
-                padding: 16px 30px;
-                font-size: 16px;
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .modal-content h2 {
+                font-size: 24px;
+            }
+
+            .modal-content p {
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-    <a href="https://32c95b00-9650-4986-aad5-b87c9761cdef.usrfiles.com/archives/32c95b_01b7da805433436faecef58885c7224f.zip" 
-       class="download-btn"
-       onclick="trackDownload()">
-        <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        Descargar Paquete Gratuito
-    </a>
+    <div class="modal-overlay" id="emailModal">
+        <div class="modal-content">
+            <h2>📥 Descarga tu Paquete Gratuito</h2>
+            <p>Ingresa tu correo electrónico para recibir acceso instantáneo a tu paquete de planos en PDF</p>
+            
+            <form class="email-form" id="emailForm">
+                <input 
+                    type="email" 
+                    class="email-input" 
+                    id="emailInput"
+                    placeholder="tu@email.com"
+                    required
+                    autocomplete="email"
+                >
+                <div class="error-message" id="errorMessage">
+                    Por favor ingresa un correo electrónico válido
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">Descargar Ahora</span>
+                </button>
+            </form>
+            
+            <div class="success-message" id="successMessage">
+                ✓ ¡Tu paquete de planos en PDF se ha descargado!
+            </div>
+        </div>
+    </div>
 
     <script>
-        function trackDownload() {
-            // Enviar evento personalizado a Meta Pixel
+        const form = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const modal = document.getElementById('emailModal');
+
+        // URL del webhook de Make.com
+        const WEBHOOK_URL = 'https://hook.us1.make.com/fyli8y7tmxu6mtqf7byp9vy2g3cji3wa';
+        
+        // URL de descarga del archivo
+        const DOWNLOAD_URL = 'https://32c95b00-9650-4986-aad5-b87c9761cdef.usrfiles.com/archives/32c95b_224aab2aef9c4f1a92dc3b95403ce713.zip';
+
+        // Validar email
+        function isValidEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        // Enviar datos al webhook
+        async function sendToWebhook(email) {
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        timestamp: new Date().toISOString(),
+                        source: 'landing_page_download'
+                    })
+                });
+
+                return response.ok;
+            } catch (error) {
+                console.error('Error al enviar al webhook:', error);
+                return false;
+            }
+        }
+
+        // Iniciar descarga
+        function startDownload() {
+            const link = document.createElement('a');
+            link.href = DOWNLOAD_URL;
+            link.download = '';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Tracking de descarga
             if (typeof fbq !== 'undefined') {
                 fbq('trackCustom', 'PDF Gratuito');
             }
             
-            // Enviar evento a Google Analytics
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'download', {
                     'event_category': 'engagement',
                     'event_label': 'PDF Gratuito'
                 });
             }
-
-            // Cambiar el texto del botón
-            const btn = document.querySelector('.download-btn');
-            const icon = btn.querySelector('.download-icon');
-            const textNode = btn.childNodes[2];
-            
-            // Cambiar ícono a check
-            icon.innerHTML = '<circle cx="12" cy="12" r="10"></circle><polyline points="9 12 11 14 15 10"></polyline>';
-            
-            // Cambiar texto
-            textNode.textContent = 'Tu descarga iniciará en breve';
-            
-            // Deshabilitar el botón
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.8';
         }
+
+        // Manejar envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            
+            // Ocultar mensajes previos
+            errorMessage.classList.remove('show');
+            emailInput.classList.remove('error');
+            
+            // Validar email
+            if (!isValidEmail(email)) {
+                errorMessage.textContent = 'Por favor ingresa un correo electrónico válido';
+                errorMessage.classList.add('show');
+                emailInput.classList.add('error');
+                return;
+            }
+            
+            // Deshabilitar botón y mostrar loading
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>';
+            
+            // Enviar al webhook
+            const success = await sendToWebhook(email);
+            
+            if (success) {
+                // Ocultar formulario y mostrar mensaje
+                form.style.display = 'none';
+                successMessage.classList.add('show');
+                
+                // Esperar 3 segundos antes de iniciar la descarga
+                setTimeout(() => {
+                    startDownload();
+                }, 3000);
+            } else {
+                // Si falla el webhook, igual permitir la descarga
+                errorMessage.textContent = 'Hubo un problema, pero tu descarga comenzará de todas formas';
+                errorMessage.classList.add('show');
+                
+                setTimeout(() => {
+                    startDownload();
+                    modal.style.display = 'none';
+                }, 1500);
+            }
+        });
+
+        // Limpiar error al escribir
+        emailInput.addEventListener('input', () => {
+            errorMessage.classList.remove('show');
+            emailInput.classList.remove('error');
+        });
     </script>
 </body>
 </html>
