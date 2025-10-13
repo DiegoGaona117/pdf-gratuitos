@@ -219,10 +219,6 @@
             display: block;
         }
 
-        .form-hidden {
-            display: none;
-        }
-
         @media (max-width: 480px) {
             .modal-content {
                 padding: 30px 20px;
@@ -271,7 +267,7 @@
             </form>
             
             <div class="success-message" id="successMessage">
-                ✓ ¡Se ha iniciado la descarga de tu paquete de planos en PDF, espera un momento!
+                ✓ ¡Redirigiendo a tu carpeta de descargas!
             </div>
         </div>
     </div>
@@ -283,13 +279,12 @@
         const btnText = document.getElementById('btnText');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
-        const modal = document.getElementById('emailModal');
 
         // URL del webhook de Make.com
         const WEBHOOK_URL = 'https://hook.us1.make.com/fyli8y7tmxu6mtqf7byp9vy2g3cji3wa';
         
-        // URL de descarga del archivo
-        const DOWNLOAD_URL = 'https://download948.mediafire.com/wpn2rw53b5wgtO0F5JEEv_OIYndDiimf64IQ3JtEh0YOZOQ1sJRmRYNZB1UUpxptAj-s-dwmXC_4UHha_1KYIbrNKT1w2VCOaNdQ7dvRR7KylVqwIQomOAJDAsFqmiB80C539lfPVUlHkHdgAsFHPORSCgH85cUmU4ixpxloLHhALw/4tdzbysxdqmztkz/Planos+de+muestra+%2B+Ensambles.zip';
+        // URL de Google Drive
+        const DRIVE_URL = 'https://drive.google.com/drive/u/0/folders/1t5fdPaDL6LFAAkTxLIsWT3w_KekKMu5_';
 
         // Validar email
         function isValidEmail(email) {
@@ -319,28 +314,6 @@
             }
         }
 
-        // Iniciar descarga
-        function startDownload() {
-            const link = document.createElement('a');
-            link.href = DOWNLOAD_URL;
-            link.download = '';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // Tracking de descarga
-            if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', 'PDF Gratuito');
-            }
-            
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'download', {
-                    'event_category': 'engagement',
-                    'event_label': 'PDF Gratuito'
-                });
-            }
-        }
-
         // Manejar envío del formulario
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -364,27 +337,28 @@
             btnText.innerHTML = '<span class="loading"></span>';
             
             // Enviar al webhook
-            const success = await sendToWebhook(email);
+            await sendToWebhook(email);
             
-            if (success) {
-                // Ocultar formulario y mostrar mensaje
-                form.style.display = 'none';
-                successMessage.classList.add('show');
-                
-                // Esperar 3 segundos antes de iniciar la descarga
-                setTimeout(() => {
-                    startDownload();
-                }, 3000);
-            } else {
-                // Si falla el webhook, igual permitir la descarga
-                errorMessage.textContent = 'Hubo un problema, pero tu descarga comenzará de todas formas';
-                errorMessage.classList.add('show');
-                
-                setTimeout(() => {
-                    startDownload();
-                    modal.style.display = 'none';
-                }, 1500);
+            // Ocultar formulario y mostrar mensaje
+            form.style.display = 'none';
+            successMessage.classList.add('show');
+            
+            // Tracking
+            if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', 'PDF Gratuito');
             }
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'download', {
+                    'event_category': 'engagement',
+                    'event_label': 'PDF Gratuito'
+                });
+            }
+            
+            // Abrir Google Drive después de 1 segundo
+            setTimeout(() => {
+                window.open(DRIVE_URL, '_blank');
+            }, 1000);
         });
 
         // Limpiar error al escribir
