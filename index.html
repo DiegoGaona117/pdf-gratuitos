@@ -100,21 +100,6 @@
             line-height: 1.5;
         }
 
-        .whatsapp-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
         .package-info {
             background: #f8f9ff;
             border-left: 4px solid #667eea;
@@ -152,42 +137,86 @@
             font-size: 18px;
         }
 
-        .whatsapp-btn {
-            background: #25D366;
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .email-input {
+            padding: 16px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .email-input:focus {
+            border-color: #667eea;
+        }
+
+        .email-input.error {
+            border-color: #ff4444;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 14px;
+            text-align: left;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 18px 40px;
+            padding: 16px;
             font-size: 18px;
             font-weight: 600;
             border: none;
-            border-radius: 50px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
-        .whatsapp-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            background: #20BA5A;
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
 
-        .whatsapp-btn:active {
-            transform: translateY(-1px);
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .whatsapp-btn-icon {
-            font-size: 24px;
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
         }
 
-        .info-text {
-            margin-top: 20px;
-            color: #888;
-            font-size: 14px;
-            line-height: 1.6;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .success-message.show {
+            display: block;
         }
 
         @media (max-width: 480px) {
@@ -202,24 +231,14 @@
             .modal-content p {
                 font-size: 14px;
             }
-
-            .whatsapp-icon {
-                font-size: 50px;
-            }
-
-            .whatsapp-btn {
-                padding: 16px 30px;
-                font-size: 16px;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="modal-overlay">
+    <div class="modal-overlay" id="emailModal">
         <div class="modal-content">
-            <div class="whatsapp-icon">💚</div>
-            <h2>📥 ¡Obtén tu Paquete Gratuito!</h2>
-            <p>Envíanos un mensaje por WhatsApp y te enviaremos tu paquete de planos inmediatamente</p>
+            <h2>📥 Descarga tu Paquete Gratuito</h2>
+            <p>Ingresa tu correo electrónico para recibir acceso instantáneo a tu paquete de planos en PDF</p>
             
             <div class="package-info">
                 <p>Tu paquete gratuito contiene:</p>
@@ -229,46 +248,123 @@
                 </ul>
             </div>
             
-            <a href="#" class="whatsapp-btn" id="whatsappBtn">
-                <span class="whatsapp-btn-icon">📱</span>
-                <span>Enviar Mensaje por WhatsApp</span>
-            </a>
+            <form class="email-form" id="emailForm">
+                <input 
+                    type="email" 
+                    class="email-input" 
+                    id="emailInput"
+                    placeholder="tu@email.com"
+                    required
+                    autocomplete="email"
+                >
+                <div class="error-message" id="errorMessage">
+                    Por favor ingresa un correo electrónico válido
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">Descargar Ahora</span>
+                </button>
+            </form>
             
-            <p class="info-text">
-                Al hacer clic, se abrirá WhatsApp con un mensaje predefinido.<br>
-                Solo tienes que enviarlo y recibirás tu paquete al instante.
-            </p>
+            <div class="success-message" id="successMessage">
+                ✓ ¡Redirigiendo a tu carpeta de descargas!
+            </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURA TU NÚMERO DE WHATSAPP AQUÍ (sin espacios, con código de país)
-        // Ejemplo: '5214471234567' para México
-        const WHATSAPP_NUMBER = '5214621579719'; // ⚠️ CAMBIA ESTE NÚMERO
+        const form = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // URL del webhook de Make.com
+        const WEBHOOK_URL = 'https://hook.us1.make.com/fyli8y7tmxu6mtqf7byp9vy2g3cji3wa';
         
-        // Mensaje predefinido que se enviará
-        const MESSAGE = '¡Hola! Quiero recibir mi paquete gratuito de 15 planos en PDF + 2 ensambles de regalo 🎁';
-        
-        // Crear URL de WhatsApp
-        const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(MESSAGE)}`;
-        
-        // Asignar URL al botón
-        document.getElementById('whatsappBtn').href = whatsappURL;
-        
-        // Tracking cuando se hace clic
-        document.getElementById('whatsappBtn').addEventListener('click', function() {
-            // Meta Pixel tracking
-            if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', 'WhatsApp_Click');
+        // URL de Google Drive
+        const DRIVE_URL = 'https://drive.google.com/drive/u/0/folders/1t5fdPaDL6LFAAkTxLIsWT3w_KekKMu5_';
+
+        // Validar email
+        function isValidEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        // Enviar datos al webhook
+        async function sendToWebhook(email) {
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        timestamp: new Date().toISOString(),
+                        source: 'landing_page_download'
+                    })
+                });
+
+                return response.ok;
+            } catch (error) {
+                console.error('Error al enviar al webhook:', error);
+                return false;
+            }
+        }
+
+        // Manejar envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            
+            // Ocultar mensajes previos
+            errorMessage.classList.remove('show');
+            emailInput.classList.remove('error');
+            
+            // Validar email
+            if (!isValidEmail(email)) {
+                errorMessage.textContent = 'Por favor ingresa un correo electrónico válido';
+                errorMessage.classList.add('show');
+                emailInput.classList.add('error');
+                return;
             }
             
-            // Google Analytics tracking
+            // Deshabilitar botón y mostrar loading
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>';
+            
+            // Enviar al webhook
+            await sendToWebhook(email);
+            
+            // Ocultar formulario y mostrar mensaje
+            form.style.display = 'none';
+            successMessage.classList.add('show');
+            
+            // Tracking
+            if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', 'PDF Gratuito');
+            }
+            
             if (typeof gtag !== 'undefined') {
-                gtag('event', 'whatsapp_click', {
+                gtag('event', 'download', {
                     'event_category': 'engagement',
-                    'event_label': 'Paquete Gratuito'
+                    'event_label': 'PDF Gratuito'
                 });
             }
+            
+            // Abrir Google Drive después de 1 segundo
+            setTimeout(() => {
+                window.open(DRIVE_URL, '_blank');
+            }, 1000);
+        });
+
+        // Limpiar error al escribir
+        emailInput.addEventListener('input', () => {
+            errorMessage.classList.remove('show');
+            emailInput.classList.remove('error');
         });
     </script>
 </body>
