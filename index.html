@@ -6,7 +6,6 @@
     <title>Descarga Gratis - 15 Planos en PDF + ensambles</title>
     <meta name="description" content="Obtén gratis 15 planos profesionales en PDF de alta calidad más acceso a ensambles. Descarga inmediata por email.">
     
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RN68VLQLTW"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -16,7 +15,6 @@
         gtag('config', 'G-QN502DE5XV');
     </script>
     
-    <!-- Meta Pixel Code -->
     <script>
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -28,7 +26,6 @@
         'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '373277814132384');
         fbq('track', 'PageView');
-        fbq('trackCustom', 'PDF_view');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
@@ -37,306 +34,50 @@
     </noscript>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 500px; width: 90%; text-align: center; animation: slideIn 0.3s ease; position: relative; }
+        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        /* CAMBIO AQUÍ: Ocultamos el botón de cerrar para que no quede la pantalla vacía */
+        .close-btn { display: none; } 
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            animation: slideIn 0.3s ease;
-            position: relative;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: transparent;
-            border: none;
-            font-size: 28px;
-            color: #999;
-            cursor: pointer;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .close-btn:hover {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .modal-content h2 {
-            color: #333;
-            margin-bottom: 12px;
-            font-size: 28px;
-        }
-
-        .modal-content p {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .whatsapp-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .package-info {
-            background: #f8f9ff;
-            border-left: 4px solid #667eea;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            text-align: left;
-        }
-
-        .package-info p {
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-
-        .package-info ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .package-info li {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .checkmark {
-            color: #4CAF50;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .email-form {
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group input.error {
-            border-color: #ff4444;
-        }
-
-        .error-message {
-            color: #ff4444;
-            font-size: 13px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .whatsapp-btn {
-            background: #25D366;
-            color: white;
-            padding: 18px 40px;
-            font-size: 18px;
-            font-weight: 600;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-            width: 100%;
-            justify-content: center;
-        }
-
-        .whatsapp-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            background: #20BA5A;
-        }
-
-        .whatsapp-btn:active:not(:disabled) {
-            transform: translateY(-1px);
-        }
-
-        .whatsapp-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .whatsapp-btn-icon {
-            font-size: 24px;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #25D366;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .whatsapp-btn.loading .spinner {
-            display: block;
-        }
-
-        .whatsapp-btn.loading .whatsapp-btn-text {
-            display: none;
-        }
-
-        .info-text {
-            margin-top: 20px;
-            color: #888;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-
-        @media (max-width: 480px) {
-            .modal-content {
-                padding: 30px 20px;
-            }
-
-            .modal-content h2 {
-                font-size: 24px;
-            }
-
-            .modal-content p {
-                font-size: 14px;
-            }
-
-            .whatsapp-icon {
-                font-size: 50px;
-            }
-
-            .whatsapp-btn {
-                padding: 16px 30px;
-                font-size: 16px;
-            }
-        }
+        .modal-content h2 { color: #333; margin-bottom: 12px; font-size: 28px; }
+        .modal-content p { color: #666; margin-bottom: 20px; font-size: 16px; line-height: 1.5; }
+        .whatsapp-icon { font-size: 60px; margin-bottom: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .package-info { background: #f8f9ff; border-left: 4px solid #667eea; padding: 15px 20px; margin-bottom: 25px; border-radius: 8px; text-align: left; }
+        .package-info p { color: #333; font-weight: 600; margin-bottom: 10px; font-size: 15px; }
+        .package-info ul { list-style: none; padding: 0; margin: 0; }
+        .package-info li { color: #555; font-size: 15px; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .checkmark { color: #4CAF50; font-weight: bold; font-size: 18px; }
+        .email-form { margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        .form-group input { width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; transition: all 0.3s ease; outline: none; }
+        .form-group input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        .form-group input.error { border-color: #ff4444; }
+        .error-message { color: #ff4444; font-size: 13px; margin-top: 5px; display: none; }
+        .error-message.show { display: block; }
+        .whatsapp-btn { background: #25D366; color: white; padding: 18px 40px; font-size: 18px; font-weight: 600; border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 12px; text-decoration: none; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); width: 100%; justify-content: center; }
+        .whatsapp-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); background: #20BA5A; }
+        .whatsapp-btn:active:not(:disabled) { transform: translateY(-1px); }
+        .whatsapp-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+        .whatsapp-btn-icon { font-size: 24px; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #25D366; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .whatsapp-btn.loading .spinner { display: block; }
+        .whatsapp-btn.loading .whatsapp-btn-text { display: none; }
+        .info-text { margin-top: 20px; color: #888; font-size: 14px; line-height: 1.6; }
+        .success-message { background: #d4edda; color: #155724; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb; display: none; }
+        .success-message.show { display: block; animation: slideIn 0.3s ease; }
+        @media (max-width: 480px) { .modal-content { padding: 30px 20px; } .modal-content h2 { font-size: 24px; } .modal-content p { font-size: 14px; } .whatsapp-icon { font-size: 50px; } .whatsapp-btn { padding: 16px 30px; font-size: 16px; } }
     </style>
 </head>
 <body>
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
-            <button class="close-btn" id="closeBtn" aria-label="Cerrar modal">×</button>
-            
             <div class="whatsapp-icon" role="img" aria-label="Icono de regalo">🎁</div>
             <h2>📥 ¡Obtén tu Paquete Gratuito!</h2>
             <p>Ingresa tu email y te enviaremos tu paquete de planos inmediatamente a tu correo</p>
@@ -398,7 +139,7 @@
             emailInput: document.getElementById('emailInput'),
             emailError: document.getElementById('emailError'),
             submitBtn: document.getElementById('submitBtn'),
-            closeBtn: document.getElementById('closeBtn'),
+            // closeBtn: document.getElementById('closeBtn'), // Ya no lo necesitamos
             modalOverlay: document.getElementById('modalOverlay'),
             successMessage: document.getElementById('successMessage')
         };
@@ -451,15 +192,8 @@
         // TRACKING
         // ==========================================
         function trackEvent(eventName, params = {}) {
-            // Google Analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', eventName, params);
-            }
-            
-            // Meta Pixel
-            if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', eventName, params);
-            }
+            if (typeof gtag !== 'undefined') { gtag('event', eventName, params); }
+            if (typeof fbq !== 'undefined') { fbq('trackCustom', eventName, params); }
         }
 
         // ==========================================
@@ -470,71 +204,30 @@
             
             const email = elements.emailInput.value.trim();
             
-            // Validar email
-            if (!email) {
-                showError('Por favor ingresa tu email');
-                return;
-            }
-            
-            if (!isValidEmail(email)) {
-                showError('Por favor ingresa un email válido');
-                return;
-            }
+            if (!email) { showError('Por favor ingresa tu email'); return; }
+            if (!isValidEmail(email)) { showError('Por favor ingresa un email válido'); return; }
             
             hideError();
             
-            // Mostrar estado de carga
             elements.submitBtn.disabled = true;
             elements.submitBtn.classList.add('loading');
             
-            // Enviar al webhook
             const success = await sendToWebhook(email);
             
             if (success) {
-                // Mostrar mensaje de éxito
                 elements.successMessage.classList.add('show');
-                
-                // Ocultar formulario
                 elements.form.style.display = 'none';
                 
-                // Track email submission
-                trackEvent('email_submitted', {
-                    event_category: 'lead_generation',
-                    event_label: 'Paquete Gratuito'
-                });
+                trackEvent('email_submitted', { event_category: 'lead_generation', event_label: 'Paquete Gratuito' });
                 
-                // Meta Pixel - Lead event
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'Lead');
-                }
+                if (typeof fbq !== 'undefined') { fbq('track', 'Lead'); }
+                
+                trackEvent('PDF_view', { event_category: 'conversion', event_label: 'Formulario Completado' });
                 
             } else {
-                // Error al enviar
                 showError('Hubo un error. Por favor intenta de nuevo.');
                 elements.submitBtn.disabled = false;
                 elements.submitBtn.classList.remove('loading');
-            }
-        });
-
-        // ==========================================
-        // CERRAR MODAL
-        // ==========================================
-        elements.closeBtn.addEventListener('click', function() {
-            trackEvent('modal_closed', {
-                event_category: 'engagement',
-                event_label: 'Usuario cerró modal'
-            });
-            elements.modalOverlay.style.display = 'none';
-        });
-
-        // Cerrar al hacer clic fuera del modal
-        elements.modalOverlay.addEventListener('click', function(e) {
-            if (e.target === elements.modalOverlay) {
-                trackEvent('modal_closed', {
-                    event_category: 'engagement',
-                    event_label: 'Click fuera del modal'
-                });
-                elements.modalOverlay.style.display = 'none';
             }
         });
 
@@ -554,6 +247,9 @@
             event_category: 'engagement',
             event_label: 'Landing Page Planos'
         });
+
+        // NOTA: Se ha eliminado el código que permitía cerrar el modal
+        // para evitar que el usuario quede en una pantalla vacía.
     </script>
 </body>
 </html>
