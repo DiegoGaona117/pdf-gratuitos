@@ -26,6 +26,7 @@
         'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '373277814132384');
         fbq('track', 'PageView');
+        fbq('track', 'PDF_view');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
@@ -222,7 +223,7 @@
                 
                 if (typeof fbq !== 'undefined') { fbq('track', 'Lead'); }
                 
-                trackEvent('PDF_viww', { event_category: 'conversion', event_label: 'Formulario Completado' });
+                trackEvent('PDF_view', { event_category: 'conversion', event_label: 'Formulario Completado' });
                 
             } else {
                 showError('Hubo un error. Por favor intenta de nuevo.');
